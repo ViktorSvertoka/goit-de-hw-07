@@ -1,0 +1,2 @@
+apache-airflow>=2.5
+apache-airflow-providers-mysql>=2.2
