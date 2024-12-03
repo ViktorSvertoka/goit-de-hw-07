@@ -148,3 +148,15 @@ Apache Airflow, і підготує до розв’язання більш ск
 
 - Посилання на репозиторій `goit-de-hw-07`.
 - Прикріплений архів із назвою ДЗ7_ПІБ.
+
+### Результат виконаного завдання № 1
+
+![Results](./print_screens/print_screen_01.png)
+
+### Результат виконаного завдання № 2
+
+![Results](./print_screens/print_screen_02.png)
+
+### Результат виконаного завдання № 3
+
+![Results](./print_screens/print_screen_03.png)
