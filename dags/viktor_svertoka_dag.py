@@ -25,7 +25,7 @@ def random_medal_choice():
 # Функція для імітації затримки обробки
 # Додає затримку виконання для створення більш реалістичного сценарію обробки даних.
 def delay_execution():
-    time.sleep(20)
+    time.sleep(35)
 
 
 # Базові параметри DAG, зокрема вказуємо власника та стартову дату.
@@ -39,11 +39,11 @@ mysql_connection_id = "mysql_connection_viktor"
 
 # Опис самого DAG
 with DAG(
-    "viktor_svertoka_dag",
+    "viktor_svertoka_dag2",
     default_args=default_args,
     schedule_interval=None,  # Немає автоматичного розкладу виконання
     catchup=False,  # Виконуються тільки актуальні запуски DAG
-    tags=["viktor_medal_counting"],  # Тег для зручного пошуку в інтерфейсі Airflow
+    tags=["viktor_medal_counting2"],  # Тег для зручного пошуку в інтерфейсі Airflow
 ) as dag:
 
     # Завдання 1: Створення таблиці для зберігання даних про медалі
@@ -129,7 +129,7 @@ with DAG(
     delay_task = PythonOperator(
         task_id="delay_task",
         python_callable=delay_execution,
-        trigger_rule=TriggerRule.ONE_SUCCESS,  # Завдання виконується навіть якщо лише одне попереднє успішне
+        trigger_rule=TriggerRule.ONE_SUCCESS,  # Виконується, якщо хоча б одне попереднє завдання успішне
     )
 
     # Завдання 8: Перевірка наявності записів у таблиці
@@ -138,12 +138,13 @@ with DAG(
         task_id="verify_recent_record",
         conn_id=mysql_connection_id,
         sql="""
-                    WITH count_in_medals AS (
-                        select COUNT(*) as nrows FROM neo_data.viktor_svertoka_medal_counts
-                        WHERE created_at >= NOW() - INTERVAL 30 SECOND
-                        )
-                    SELECT nrows > 0 from count_in_medals; 
-                """,
+            WITH count_in_medals AS (
+                SELECT COUNT(*) as nrows
+                FROM neo_data.viktor_svertoka_medal_counts
+                WHERE created_at >= NOW() - INTERVAL 30 SECOND
+            )
+            SELECT nrows > 0 FROM count_in_medals;
+        """,
         mode="poke",  # Перевірка умови періодично
         poke_interval=10,  # Інтервал перевірки (10 секунд)
         timeout=30,  # Тайм-аут перевірки (30 секунд)
